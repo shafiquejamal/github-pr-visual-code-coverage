@@ -1,0 +1,17 @@
+# Output directories
+dist
+build
+
+# Dependency directory
+node_modules
+
+# Vite public assets (already formatted)
+public/images
+
+# Lock files
+package-lock.json
+package.json
+pnpm-lock.yaml
+yarn.lock
+
+tsconfig.json
