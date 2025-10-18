@@ -1,0 +1,56 @@
+*,
+*::before,
+*::after,
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	border-radius: 20px;
+}
+
+form {
+	max-width: 400px;
+	min-width: 250px;
+}
+
+form > input,
+form > button {
+	max-width: inherit;
+	min-width: inherit;
+	text-align: center;
+	align-self: center;
+	padding: 8px 16px;
+	margin: 16px;
+	font-size: 16px;
+	border-radius: 8px;
+	outline: none;
+	border: none;
+}
+
+form > input:focus {
+	outline: 2px solid #393e46;
+}
+
+form > input:not(:focus) {
+	outline: 2px solid #dfd0b8;
+}
+
+form > button:active {
+	transform: scale(0.9);
+	transition: transform 200ms ease-out;
+}
+
+form > button {
+	font-style: bold;
+	background: #393e46;
+	margin-top: 0;
+	color: #dfd0b8;
+	cursor: pointer;
+	box-shadow:
+		rgba(0, 0, 0, 0.16) 0px 3px 6px,
+		rgba(0, 0, 0, 0.23) 0px 3px 6px;
+	transition: transform 200ms ease-in;
+}

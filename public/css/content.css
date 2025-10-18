@@ -1,0 +1,52 @@
+:root {
+	--covered-lines-color: #2ecc71;
+	--uncovered-lines-color: #f55353;
+	--toggle-button-show-background-color: #5409da;
+	--toggle-button-show-foreground-color: #eaefef;
+	--toggle-button-hide-background-color: #eaefef;
+	--toggle-button-hide-foreground-color: #5409da;
+}
+
+.js-diff-progressive-container table tbody tr td.covered-lines {
+	border-right: 5px solid var(--covered-lines-color);
+}
+
+.js-diff-progressive-container table tbody tr td.uncovered-lines {
+	border-right: 5px solid var(--uncovered-lines-color);
+}
+
+.js-diff-progressive-container table tbody tr td.covered-lines.hide,
+.js-diff-progressive-container table tbody tr td.uncovered-lines.hide {
+	border: none;
+}
+
+button.toggle-coverage {
+	right: 0;
+	bottom: 0;
+	margin: 20px;
+	padding: 5px 10px;
+	position: fixed;
+	font-size: 16px;
+	font-weight: bold;
+	border: none;
+	border-radius: 5px;
+	box-shadow:
+		rgba(0, 0, 0, 0.16) 0px 3px 6px,
+		rgba(0, 0, 0, 0.23) 0px 3px 6px;
+	transition: transform 200ms ease-in;
+}
+
+button.toggle-coverage:active {
+	transform: scale(0.9);
+	transition: transform 200ms ease-out;
+}
+
+button.toggle-coverage[data-show-coverage='true'] {
+	color: var(--toggle-button-show-foreground-color);
+	background-color: var(--toggle-button-show-background-color);
+}
+
+button.toggle-coverage[data-show-coverage='false'] {
+	color: var(--toggle-button-hide-foreground-color);
+	background-color: var(--toggle-button-hide-background-color);
+}
