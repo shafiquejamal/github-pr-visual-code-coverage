@@ -1,0 +1,85 @@
+---
+name: GoTest
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+
+      - name: Install gocov
+        run: go install github.com/axw/gocov/gocov@latest
+
+      - name: Generate coverage.json file
+        run: |
+          gocov test > coverage.json
+
+          byte_range_to_lines() {
+              local file="$1"
+              local start_byte="$2"
+              local end_byte="$3"
+
+              awk -v start="$start_byte" -v end="$end_byte" '
+              BEGIN { s = -1; e = -1; pos = 0 }
+              {
+                len = length($0) + 1  # Include newline
+                if (s == -1 && pos + len > start) s = NR
+                if (pos + len >= end) {
+                  e = NR
+                  print s " " e
+                  exit
+                }
+                pos += len
+              }
+            ' "$file"
+          }
+
+          {
+              echo "["
+
+              FILE_FIRST=1
+              jq -c '.Packages[].Functions[]' coverage.json | while read -r func; do
+                  FILE=$(echo "$func" | jq -r '.File')
+
+                  if [[ $FILE_FIRST -eq 0 ]]; then
+                      echo ","
+                  fi
+                  FILE_FIRST=0
+
+                  echo "  { \"file\": \"$FILE\", \"statements\": ["
+
+                  STATEMENTS=$(echo "$func" | jq -c '.Statements[]')
+                  STMT_FIRST=1
+
+                  while read -r stmt; do
+                      START=$(echo "$stmt" | jq -r '.Start')
+                      END=$(echo "$stmt" | jq -r '.End')
+                      REACHED=$(echo "$stmt" | jq -r '.Reached')
+
+                      read LINE_START LINE_END < <(byte_range_to_lines "$FILE" "$START" "$END")
+
+                      LINE_ARRAY=$(seq "$LINE_START" "$LINE_END" | jq -cs '.')
+
+                      if [[ $STMT_FIRST -eq 0 ]]; then
+                          echo ","
+                      fi
+                      STMT_FIRST=0
+
+                      echo -n "    { \"lines\": $LINE_ARRAY, \"reached\": $REACHED }"
+                  done <<<"$STATEMENTS"
+
+                  echo -e "\n  ]}"
+              done
+
+              echo "]"
+          } >output.json && mv output.json coverage.json
+
+      - name: Update coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.json
+          path: coverage.json
