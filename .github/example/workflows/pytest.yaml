@@ -1,0 +1,51 @@
+---
+name: Pytest
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Install project dependencies
+        run: |
+          poetry install --no-root
+          poetry add --group dev pytest pytest-cov
+
+      - name: Activate virtual environment
+        run: poetry env activate
+
+      - name: Create .coveragerc file
+        run: |
+          touch .coveragerc
+          echo "[run]" >>.coveragerc
+          echo "omit =" >>.coveragerc
+          echo "  tests/*" >>.coveragerc
+          echo "  test_*.py" >>.coveragerc
+          echo "  */site-packages/*" >>.coveragerc
+
+      - name: Generate coverage.json file
+        run: |
+          set +e # still continue execution if there's an error
+          poetry run pytest --cov --cov-report=json:coverage.json
+          echo "COVERAGE_EXIT_CODE=$?" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Update coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.json
+          path: coverage.json
+
+      - name: Report test result (passed or failed)
+        run: |
+          [ $COVERAGE_EXIT_CODE -eq 0 ] && exit 0
+          [ $COVERAGE_EXIT_CODE -ne 0 ] && exit 1
+        env:
+          COVERAGE_EXIT_CODE: ${{ env.COVERAGE_EXIT_CODE }}

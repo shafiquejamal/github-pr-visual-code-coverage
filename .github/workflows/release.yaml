@@ -1,0 +1,52 @@
+---
+name: Release
+
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "release tag"
+        required: true
+        default: "v0.1.0"
+      prerelease:
+        description: "pre-release"
+        type: boolean
+        default: false
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      BUILD_DIR: "github-browser-extension-${{ inputs.release_tag }}"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Run npm run build
+        run: npm run build
+
+      - name: ZIP build directory
+        run: |
+          mv build ${{ env.BUILD_DIR }}
+          zip -r "${{ env.BUILD_DIR }}.zip" ${{ env.BUILD_DIR }}
+
+      - if: inputs.prerelease == true
+        run: echo "PRERELEASE=--prerelease" >> $GITHUB_ENV
+
+      - name: Release ${{ inputs.release_tag }}
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          gh release create ${{ inputs.release_tag }} $PRERELEASE "${{ env.BUILD_DIR }}.zip" --generate-notes

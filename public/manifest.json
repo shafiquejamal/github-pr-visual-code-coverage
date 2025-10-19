@@ -1,0 +1,37 @@
+{
+	"name": "Github PR Code Coverage",
+	"description": "Github PR Code Coverage",
+	"version": "0.1.0",
+	"manifest_version": 3,
+	"icons": {
+		"16": "images/icons/test-16.png",
+		"32": "images/icons/test-32.png",
+		"48": "images/icons/test-48.png",
+		"128": "images/icons/test-128.png"
+	},
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "images/icons/test-16.png",
+			"32": "images/icons/test-32.png",
+			"48": "images/icons/test-48.png",
+			"128": "images/icons/test-128.png"
+		}
+	},
+	"background": {
+		"service_worker": "scripts/background.js"
+	},
+	"content_scripts": [
+		{
+			"js": ["scripts/content.js"],
+			"css": ["css/content.css"],
+			"matches": [
+				"https://github.com/*/*/pull/*/files",
+				"https://github.com/*/*/pull/*/files*"
+			],
+			"run_at": "document_idle"
+		}
+	],
+	"permissions": ["storage", "tabs", "scripting", "activeTab"],
+	"host_permissions": ["https://github.com/*"]
+}
