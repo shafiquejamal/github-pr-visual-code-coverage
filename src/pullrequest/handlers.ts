@@ -108,7 +108,10 @@ const Handlers: IPullRequestHandlers = {
 		if (cache?.coverage_artifact) return cache.coverage_artifact
 
 		const artifact = artifactList
-			.filter(artifact => artifact.name === 'coverage.json')
+			.filter(
+				artifact =>
+					artifact.name === 'coverage.json' || artifact.name === 'packages'
+			)
 			?.at(0)
 
 		if (!artifact) return undefined

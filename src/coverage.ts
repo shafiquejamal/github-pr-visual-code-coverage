@@ -9,9 +9,6 @@ const Coverage: ICodeCoverage = {
 				`table[aria-label="Diff for: ${filename}"] > tbody > tr > td:nth-child(2)`
 			)
 
-			console.log(`${filename}, covered_lines =`, covered_lines)
-			console.log(`${filename}, uncovered_lines =`, uncovered_lines)
-
 			lineElements.forEach(lineElement => {
 				const code: Element | null = lineElement.querySelector('code')
 				if (code?.textContent) {

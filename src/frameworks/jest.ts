@@ -18,57 +18,68 @@ export class JestCoverageArtifact implements ICoverageArtifact {
 		const buffer = new Uint8Array(this.coverage_artifact).buffer
 		const zip = await JSZip.loadAsync(buffer)
 
-		const jsonString =
-			(await zip.file('coverage-final.json')?.async('string')) ?? ''
+		const code_coverage: Array<{
+			filename: string
+			covered_lines: Array<number>
+			uncovered_lines: Array<number>
+		}> = []
 
-		const coverage_json: JestCoverageJsonFile = JSON.parse(jsonString)
+		for (const file of Object.values(zip.files)) {
+			const jsonString = await zip.file(file.name)?.async('string')
+			if (jsonString) {
+				const coverage_json: JestCoverageJsonFile = JSON.parse(jsonString)
+				const files = Object.keys(coverage_json)
 
-		const files = Object.keys(coverage_json)
+				files.forEach(absolute_path => {
+					const repository = absolute_path.split('/').at(4)
+					const root_path = `/home/runner/work/${repository}/${repository}/`
+					const relative_path = absolute_path.replace(root_path, '')
 
-		const code_coverage = files.map(absolute_path => {
-			const repository = absolute_path.split('/').at(4)
-			const root_path = `/home/runner/work/${repository}/${repository}/`
-			const relative_path = absolute_path.replace(root_path, '')
+					const statements = coverage_json[absolute_path].s
+					const statementMap = coverage_json[absolute_path].statementMap
 
-			const statements = coverage_json[absolute_path].s
-			const statementMap = coverage_json[absolute_path].statementMap
+					const getCoveredStatements =
+						(statements: (typeof coverage_json)[string]['s']) =>
+						(statement: keyof typeof statements) =>
+							statements[statement] >= 1
 
-			const getCoveredStatements =
-				(statements: (typeof coverage_json)[string]['s']) =>
-				(statement: keyof typeof statements) =>
-					statements[statement] >= 1
+					const getUncoveredStatements =
+						(statements: (typeof coverage_json)[string]['s']) =>
+						(statement: keyof typeof statements) =>
+							statements[statement] == 0
 
-			const getUncoveredStatements =
-				(statements: (typeof coverage_json)[string]['s']) =>
-				(statement: keyof typeof statements) =>
-					statements[statement] == 0
+					const getLineRange =
+						(statementMap: (typeof coverage_json)[string]['statementMap']) =>
+						(
+							statement: keyof (typeof coverage_json)[string]['statementMap']
+						) => {
+							const start = statementMap[statement].start.line
+							const end = statementMap[statement].end.line
+							return new Array(end - start + 1)
+								.fill(0)
+								.map((_, idx) => start + idx)
+						}
 
-			const getLineRange =
-				(statementMap: (typeof coverage_json)[string]['statementMap']) =>
-				(statement: keyof (typeof coverage_json)[string]['statementMap']) => {
-					const start = statementMap[statement].start.line
-					const end = statementMap[statement].end.line
-					return new Array(end - start + 1).fill(0).map((_, idx) => start + idx)
-				}
+					const covered_lines = Object.keys(statements)
+						.map(Number)
+						.filter(getCoveredStatements(statements))
+						.flatMap(getLineRange(statementMap))
+						.filter((line, idx, self) => self.indexOf(line) === idx)
 
-			const covered_lines = Object.keys(statements)
-				.map(Number)
-				.filter(getCoveredStatements(statements))
-				.flatMap(getLineRange(statementMap))
-				.filter((line, idx, self) => self.indexOf(line) === idx)
+					const uncovered_lines = Object.keys(statements)
+						.map(Number)
+						.filter(getUncoveredStatements(statements))
+						.flatMap(getLineRange(statementMap))
+						.filter((line, idx, self) => self.indexOf(line) === idx)
 
-			const uncovered_lines = Object.keys(statements)
-				.map(Number)
-				.filter(getUncoveredStatements(statements))
-				.flatMap(getLineRange(statementMap))
-				.filter((line, idx, self) => self.indexOf(line) === idx)
-
-			return {
-				filename: relative_path,
-				covered_lines,
-				uncovered_lines
+					code_coverage.push({
+						filename: relative_path,
+						covered_lines,
+						uncovered_lines
+					})
+				})
 			}
-		})
+		}
 
 		return code_coverage
 	}

@@ -37,6 +37,7 @@ because **Github PR Code Coverage** extension needs these file for it to highlig
 - [golang pr example](https://github.com/gelocraft/go-test-example/pull/6/files)
 - [pytest pr example](https://github.com/gelocraft/pytest-example/pull/2/files)
 - [jest pr example](https://github.com/gelocraft/jest-example/pull/1/files)
+- [jest npm workspaces pr example](https://github.com/gelocraft/npm-workspaces-test-coverage-example/pull/1/changes)
 
 
 ### How to build locally
