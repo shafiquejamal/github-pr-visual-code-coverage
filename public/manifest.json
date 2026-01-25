@@ -26,8 +26,8 @@
 			"js": ["scripts/content.js"],
 			"css": ["css/content.css"],
 			"matches": [
-				"https://github.com/*/*/pull/*/files",
-				"https://github.com/*/*/pull/*/files*"
+				"https://github.com/*/*/pull/*/changes",
+				"https://github.com/*/*/pull/*/changes*"
 			],
 			"run_at": "document_idle"
 		}
