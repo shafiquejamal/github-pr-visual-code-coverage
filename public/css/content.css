@@ -7,16 +7,16 @@
 	--toggle-button-hide-foreground-color: #5409da;
 }
 
-.js-diff-progressive-container table tbody tr td.covered-lines {
+.covered-lines {
 	border-right: 5px solid var(--covered-lines-color);
 }
 
-.js-diff-progressive-container table tbody tr td.uncovered-lines {
+.uncovered-lines {
 	border-right: 5px solid var(--uncovered-lines-color);
 }
 
-.js-diff-progressive-container table tbody tr td.covered-lines.hide,
-.js-diff-progressive-container table tbody tr td.uncovered-lines.hide {
+.covered-lines.hide,
+.uncovered-lines.hide {
 	border: none;
 }
 
