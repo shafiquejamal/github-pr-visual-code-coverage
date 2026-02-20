@@ -10,9 +10,8 @@ const Coverage: ICodeCoverage = {
 			)
 
 			lineElements.forEach(lineElement => {
-				const code: Element | null = lineElement.querySelector('code')
-				if (code?.textContent) {
-					const lineNumber = Number(code.textContent)
+				if (lineElement?.textContent) {
+					const lineNumber = Number(lineElement.textContent)
 
 					covered_lines.forEach(covered_line => {
 						if (covered_line === lineNumber) {
