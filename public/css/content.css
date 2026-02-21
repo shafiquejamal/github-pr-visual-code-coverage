@@ -9,10 +9,12 @@
 
 .covered-lines {
 	border-right: 5px solid var(--covered-lines-color);
+	z-index: 10;
 }
 
 .uncovered-lines {
 	border-right: 5px solid var(--uncovered-lines-color);
+	z-index: 20;
 }
 
 .covered-lines.hide,
