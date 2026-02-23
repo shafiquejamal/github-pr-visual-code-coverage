@@ -9,7 +9,7 @@ const Coverage: ICodeCoverage = {
 				return function (lineNumber: Number) {
 					document
 						.querySelectorAll(
-							`table[aria-label="Diff for: ${filename}"] > tbody > tr > td[data-line-number="${lineNumber}"]`
+							`table[aria-label="Diff for: ${filename}"] > tbody > tr > td[data-line-number="${lineNumber}"][data-diff-side="right"]`
 						)
 						.forEach(element => {
 							if (Number(element?.textContent) === lineNumber) {
