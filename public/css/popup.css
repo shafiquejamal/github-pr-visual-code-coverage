@@ -1,56 +1,76 @@
 *,
 *::before,
 *::after,
+html,
 body {
 	margin: 0;
 	padding: 0;
+	background: none;
 	box-sizing: border-box;
 }
 
-body {
-	border-radius: 20px;
-}
-
-form {
+form.popup-options {
+	display: flex;
+	flex-direction: column;
+	background: #f7f8f0;
+	overflow: hidden;
 	max-width: 400px;
 	min-width: 250px;
 }
 
-form > input,
-form > button {
-	max-width: inherit;
-	min-width: inherit;
-	text-align: center;
-	align-self: center;
+form.popup-options button {
 	padding: 8px 16px;
-	margin: 16px;
 	font-size: 16px;
-	border-radius: 8px;
-	outline: none;
+	font-weight: bold;
+	text-align: center;
+	color: #262626;
 	border: none;
+	outline: none;
+	border-bottom: 1px solid #262626;
+	letter-spacing: 2px;
+	text-transform: uppercase;
 }
-
-form > input:focus {
-	outline: 2px solid #393e46;
-}
-
-form > input:not(:focus) {
-	outline: 2px solid #dfd0b8;
-}
-
-form > button:active {
-	transform: scale(0.9);
-	transition: transform 200ms ease-out;
-}
-
-form > button {
-	font-style: bold;
-	background: #393e46;
-	margin-top: 0;
-	color: #dfd0b8;
+form.popup-options button:hover {
 	cursor: pointer;
-	box-shadow:
-		rgba(0, 0, 0, 0.16) 0px 3px 6px,
-		rgba(0, 0, 0, 0.23) 0px 3px 6px;
-	transition: transform 200ms ease-in;
+	color: #f7f8f0;
+	background: #262626;
 }
+
+/* form > input, */
+/* form > button { */
+/* 	max-width: inherit; */
+/* 	min-width: inherit; */
+/* 	text-align: center; */
+/* 	align-self: center; */
+/* 	padding: 8px 16px; */
+/* 	margin: 16px; */
+/* 	font-size: 16px; */
+/* 	border-radius: 8px; */
+/* 	outline: none; */
+/* 	border: none; */
+/* } */
+/**/
+/* form > input:focus { */
+/* 	outline: 2px solid #393e46; */
+/* } */
+/**/
+/* form > input:not(:focus) { */
+/* 	outline: 2px solid #dfd0b8; */
+/* } */
+/**/
+/* form > button:active { */
+/* 	transform: scale(0.9); */
+/* 	transition: transform 200ms ease-out; */
+/* } */
+/**/
+/* form > button { */
+/* 	font-style: bold; */
+/* 	background: #393e46; */
+/* 	margin-top: 0; */
+/* 	color: #dfd0b8; */
+/* 	cursor: pointer; */
+/* 	box-shadow: */
+/* 		rgba(0, 0, 0, 0.16) 0px 3px 6px, */
+/* 		rgba(0, 0, 0, 0.23) 0px 3px 6px; */
+/* 	transition: transform 200ms ease-in; */
+/* } */
