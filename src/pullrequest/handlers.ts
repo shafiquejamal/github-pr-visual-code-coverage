@@ -7,6 +7,7 @@ import { JestCoverageArtifact } from '../frameworks/jest'
 import { PytestCoverageArtifact } from '../frameworks/pytest'
 import { GoTestCoverageArtifact } from '../frameworks/gotest'
 import { RustTestCoverageArtifact } from '../frameworks/rustest'
+import { showToastNotification } from '../notification'
 
 const url = new URL(window.location.href)
 
@@ -136,10 +137,17 @@ const Handlers: IPullRequestHandlers = {
 			.then(uint8 => Array.from(uint8))
 			.catch(async err => {
 				if (err.message.includes('Bad credentials')) {
+					showToastNotification(
+						'Invalid GitHub token - please check and update your credentials.'
+					)
 					await Cache.set({ gh_token_status: 'bad' })
+				} else if (err.message.includes('Artifact has expired')) {
+					showToastNotification(
+						'Artifact has expired - reopen the pull request to regenerate it.'
+					)
+				} else {
+					showToastNotification(err.message)
 				}
-				// popup notification
-				console.log('Error(getCoverageArtifact)', err)
 				return undefined
 			})
 
