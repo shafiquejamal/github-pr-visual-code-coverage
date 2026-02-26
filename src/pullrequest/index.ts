@@ -27,7 +27,9 @@ const PullRequest: IPullRequest = {
 		if (this.branch instanceof Promise) return this
 
 		const { owner, repo, pull_number } = this
-		this.branch = handler({ owner, repo, pull_number }).then().catch()
+		this.branch = handler({ owner, repo, pull_number })
+			.then(branch => branch)
+			.catch(() => undefined)
 		return this
 	},
 

@@ -15,13 +15,13 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.branch) return cache.branch
 
-		const octokit = new Octokit({ auth: await getAuthToken() })
+		const octokit = new Octokit()
 		const branch = await octokit.pulls
 			.get({ owner, repo, pull_number })
 			.then(response => response.data)
 			.then(data => data.head.ref)
 			.catch(err => {
-				console.log(err)
+				console.log('Error(getBranchRef)', err)
 				return undefined
 			})
 
@@ -38,12 +38,12 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.workflow_runs) return cache.workflow_runs
 
-		const octokit = new Octokit({ auth: await getAuthToken() })
+		const octokit = new Octokit()
 		const workflow_runs = await octokit.rest.actions
 			.listWorkflowRunsForRepo({ owner, repo, branch })
 			.then(response => response.data.workflow_runs)
 			.catch(err => {
-				console.log(err)
+				console.log('Error(getWorkflowRuns)', err)
 				return undefined
 			})
 
@@ -84,7 +84,7 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.artifact_list) return cache.artifact_list
 
-		const octokit = new Octokit({ auth: await getAuthToken() })
+		const octokit = new Octokit()
 		const artifact_list = await octokit.rest.actions
 			.listWorkflowRunArtifacts({
 				owner,
@@ -92,7 +92,10 @@ const Handlers: IPullRequestHandlers = {
 				run_id
 			})
 			.then(response => response.data.artifacts)
-			.catch(() => undefined)
+			.catch(err => {
+				console.log(`Error(getArtifactList) ${err.message}`)
+				return undefined
+			})
 
 		const updatedCache = { ...cache, artifact_list }
 		await Cache.set({ [url.pathname]: updatedCache })
@@ -124,11 +127,21 @@ const Handlers: IPullRequestHandlers = {
 				artifact_id: artifact.id,
 				archive_format: 'zip'
 			})
-			.then(response => response.data)
+			.then(async response => {
+				await Cache.set({ gh_token_status: 'good' })
+				return response.data
+			})
 			// @ts-expect-error this should be fine
 			.then(buffer => new Uint8Array(buffer))
 			.then(uint8 => Array.from(uint8))
-			.catch(() => undefined)
+			.catch(async err => {
+				if (err.message.includes('Bad credentials')) {
+					await Cache.set({ gh_token_status: 'bad' })
+				}
+				// popup notification
+				console.log('Error(getCoverageArtifact)', err)
+				return undefined
+			})
 
 		const updatedCache = { ...cache, coverage_artifact }
 		await Cache.set({ [url.pathname]: updatedCache })
