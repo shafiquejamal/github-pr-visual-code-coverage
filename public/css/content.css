@@ -52,3 +52,36 @@ button.toggle-coverage[data-show-coverage='false'] {
 	color: var(--toggle-button-hide-foreground-color);
 	background-color: var(--toggle-button-hide-background-color);
 }
+
+span.toast-notification {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+
+	background-color: #f2d98a;
+	color: #4a3a00;
+
+	font-size: 16px;
+	font-weight: bold;
+	font-family: sans-serif;
+
+	padding: 12px 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	z-index: 100;
+	opacity: 0;
+	transition:
+		opacity 0.3s ease,
+		transform 0.3s ease;
+	pointer-events: none;
+}
+
+span.toast-notification.show {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+span.toast-notification.hide {
+	opacity: 0;
+	transform: translateY(20px);
+}
