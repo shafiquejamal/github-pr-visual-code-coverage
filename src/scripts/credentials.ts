@@ -1,5 +1,3 @@
-import { getAuthToken } from '../pullrequest/credential'
-
 function maskInputValue(value: string, visibleChar: number = 5) {
 	const visiblePart = value.slice(-5)
 	const maskedPart = '•'.repeat(Math.max(0, value.length - visibleChar))
@@ -40,7 +38,10 @@ const credsInputField: HTMLInputElement | null = document.querySelector(
 )
 
 ;(async function () {
-	const token = await getAuthToken()
+	const token: string | undefined = await chrome.storage.local
+		.get('gh_token')
+		.then(data => data['gh_token'])
+
 	if (token && credsInputField) {
 		maskInputValue(token)
 		credsInputField.value = token
@@ -68,7 +69,9 @@ const updateTokenBtn: HTMLButtonElement | null = document.querySelector(
 credsInputField?.addEventListener('input', async event => {
 	if (event.target instanceof HTMLInputElement) {
 		if (updateTokenBtn) {
-			const token = await getAuthToken()
+			const token: string | undefined = await chrome.storage.local
+				.get('gh_token')
+				.then(data => data['gh_token'])
 			const value = event.target.value
 			updateTokenBtn.disabled = value === '' || value === token
 		}
@@ -77,7 +80,9 @@ credsInputField?.addEventListener('input', async event => {
 
 credsInputField?.addEventListener('input', async () => {
 	if (updateTokenBtn) {
-		const token = await getAuthToken()
+		const token: string | undefined = await chrome.storage.local
+			.get('gh_token')
+			.then(data => data['gh_token'])
 		if (
 			(credsInputField.value === '' && token === undefined) ||
 			(credsInputField.value !== '' && token === undefined)
@@ -108,7 +113,9 @@ tokenInputForm?.addEventListener('submit', () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
 	if (credsInputField && updateTokenBtn) {
-		const token = await getAuthToken()
+		const token: string | undefined = await chrome.storage.local
+			.get('gh_token')
+			.then(data => data['gh_token'])
 		if (
 			(credsInputField.value === '' && token === undefined) ||
 			(credsInputField.value !== '' && token === undefined)
