@@ -3,7 +3,14 @@ import PullRequest from '../pullrequest'
 import Handlers from '../pullrequest/handlers'
 
 async function executeContentScript() {
-	if (!location.pathname.includes('/changes')) return
+	const url = new URL(window.location.href)
+	if (
+		!url.pathname.endsWith('/changes') ||
+		!url.pathname.endsWith('/changes?diff=unified') ||
+		!url.pathname.endsWith('/changes?diff=split')
+	)
+		return
+
 	await PullRequest.getBranchRef(Handlers.getBranchRef)
 		.getWorkflowRuns(Handlers.getWorkflowRuns)
 		.getCoverageWorkflowRun(Handlers.getCoverageWorkflowRun)
