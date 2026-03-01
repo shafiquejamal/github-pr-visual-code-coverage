@@ -4,7 +4,6 @@ import Handlers from '../pullrequest/handlers'
 
 async function executeContentScript() {
 	const url = new URL(window.location.href)
-	console.log(url.pathname)
 	if (
 		url.pathname.endsWith('/changes') ||
 		url.pathname.endsWith('/changes?diff=unified') ||

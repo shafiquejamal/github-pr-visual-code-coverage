@@ -1,0 +1,203 @@
+:root {
+	--covered-lines-color: #2ecc71;
+	--uncovered-lines-color: #f55353;
+	--covered-highlight-thickness: 5px;
+	--uncovered-highlight-thickness: 5px;
+}
+
+*,
+*::before,
+*::after,
+html,
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.customization-container {
+	display: flex;
+	flex-direction: row;
+	width: 100vw;
+	height: 100vh;
+	background: #f7f8f0;
+}
+
+.customization-container .sidebar.left ul {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 100%;
+	max-height: 100%;
+	box-shadow: 2px 0 6px rgba(38, 38, 38, 0.1);
+}
+
+.customization-container .sidebar.left ul li {
+	box-shadow:
+		2px 0 6px rgba(38, 38, 38, 0.1),
+		0 2px 6px rgba(38, 38, 38, 0.1); /* bottom shadow */
+	text-decoration: none;
+}
+
+.customization-container .sidebar.left ul li a {
+	display: block;
+	font-size: 28px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	text-decoration: none;
+	text-transform: lowercase;
+	color: #262626;
+	padding: 8px 16px;
+}
+
+.customization-container .sidebar.left ul li:hover a {
+	text-decoration: underline;
+}
+
+.customization-container .sidebar.left ul li.customization-tab-li:hover a {
+	text-decoration: none;
+}
+
+.customization-container .sidebar.left ul li.customization-tab-li a {
+	background: #262626;
+	color: #f7f8f0;
+}
+
+.customization-container .main-content.right {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	max-width: 100%;
+	height: 100%;
+	min-height: 100%;
+	max-height: 100%;
+	color: #262626;
+	background: #f7f8f0;
+}
+
+.customization-container .main-content.right h1 {
+	font-size: 48px;
+	user-select: none;
+}
+
+.customization-container .main-content.right form {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 40px;
+	gap: 10px;
+	width: 100%;
+	max-width: 100%;
+}
+
+.customization-container .main-content.right form span {
+	font-size: 20px;
+	font-weight: bold;
+	width: 18%;
+	min-width: 18%;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: center;
+	user-select: none;
+	padding-block: 8px;
+	box-shadow: 2px 0 6px rgba(38, 38, 38, 0.1);
+}
+
+.customization-container .main-content.right form.covered-lines span {
+	color: var(--covered-lines-color);
+	border-left: var(--covered-highlight-thickness) solid
+		var(--covered-lines-color);
+	/* border-block: 1px solid var(--covered-lines-color); */
+	/* border-right: 1px solid var(--covered-lines-color); */
+}
+
+.customization-container .main-content.right form.uncovered-lines span {
+	color: var(--uncovered-lines-color);
+	border-left: var(--uncovered-highlight-thickness) solid
+		var(--uncovered-lines-color);
+	/* border-block: 1px solid var(--uncovered-lines-color); */
+	/* border-right: 1px solid var(--uncovered-lines-color); */
+}
+
+.customization-container .main-content.right form input,
+.customization-container .main-content.right form button {
+	border: none;
+	outline: none;
+	border-radius: 5px;
+	font-size: 20px;
+	padding: 8px 16px;
+	text-align: center;
+}
+
+.customization-container .main-content.right form input {
+	background: #f7f8f0;
+	font-weight: bold;
+	outline: 1px solid rgba(38, 38, 38, 0.2);
+	color: rgba(38, 38, 38, 0.5);
+}
+
+.customization-container .main-content.right form input:focus::placeholder {
+	text-align: center;
+}
+
+.customization-container .main-content.right form input::placeholder {
+	user-select: none;
+}
+
+.customization-container .main-content.right form input:focus {
+	outline: 3px solid rgba(38, 38, 38, 0.5);
+}
+
+.customization-container
+	.main-content.right
+	form
+	input[type='number']::-webkit-outer-spin-button,
+.customization-container
+	.main-content.right
+	form
+	input[type='number']::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.customization-container
+	.main-content.right
+	form
+	input[type='number']:focus::-webkit-outer-spin-button,
+.customization-container
+	.main-content.right
+	form
+	input[type='number']:focus::-webkit-inner-spin-button {
+	-webkit-appearance: auto;
+}
+
+.customization-container .main-content.right form input.color {
+	width: 12%;
+	min-width: 12%;
+}
+
+.customization-container .main-content.right form input.thickness {
+	width: 8%;
+	min-width: 8%;
+}
+
+.customization-container .main-content.right form button {
+	font-weight: bold;
+	user-select: none;
+	background: #262626;
+	color: #f7f8f0;
+	cursor: pointer;
+	box-shadow:
+		rgba(38, 38, 38, 0.16) 0px 3px 6px,
+		rgba(38, 38, 38, 0.23) 0px 3px 6px;
+	transition: all 0.2s ease;
+}
+
+.customization-container .main-content.right form button:active {
+	transform: scale(0.9);
+}
