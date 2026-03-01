@@ -7,6 +7,60 @@
 		<link href="css/customization.css" rel="stylesheet" />
 	</head>
 	<body>
-		<h1>customization</h1>
+		<div class="customization-container">
+			<div class="sidebar left">
+				<ul>
+					<li>
+						<a href="data-cache.html">data cache</a>
+					</li>
+					<li>
+						<a href="credentials.html">credentials</a>
+					</li>
+					<li class="customization-tab-li">
+						<a href="customization.html">customization</a>
+					</li>
+				</ul>
+			</div>
+			<div class="main-content right">
+				<h1>color & size</h1>
+				<form class="covered-lines">
+					<span>covered lines</span>
+					<input
+						spellcheck="false"
+						required
+						class="color"
+						type="text"
+						placeholder="color"
+					/>
+					<input
+						spellcheck="false"
+						required
+						class="thickness"
+						type="number"
+						placeholder="(px)"
+					/>
+					<button type="submit">update</button>
+				</form>
+				<form class="uncovered-lines">
+					<span>uncovered lines</span>
+					<input
+						spellcheck="false"
+						required
+						class="color"
+						type="text"
+						placeholder="color"
+					/>
+					<input
+						spellcheck="false"
+						required
+						class="thickness"
+						type="number"
+						placeholder="(px)"
+					/>
+					<button type="submit">update</button>
+				</form>
+			</div>
+		</div>
+		<script type="module" src="scripts/customization.js"></script>
 	</body>
 </html>

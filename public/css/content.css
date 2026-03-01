@@ -1,6 +1,10 @@
 :root {
 	--covered-lines-color: #2ecc71;
 	--uncovered-lines-color: #f55353;
+
+	--covered-highlight-thickness: 5px;
+	--uncovered-highlight-thickness: 5px;
+
 	--toggle-button-show-background-color: #5409da;
 	--toggle-button-show-foreground-color: #eaefef;
 	--toggle-button-hide-background-color: #eaefef;
@@ -8,12 +12,14 @@
 }
 
 .covered-lines {
-	border-right: 5px solid var(--covered-lines-color);
+	border-right: var(--covered-highlight-thickness) solid
+		var(--covered-lines-color);
 	z-index: 10;
 }
 
 .uncovered-lines {
-	border-right: 5px solid var(--uncovered-lines-color);
+	border-right: var(--uncovered-highlight-thickness) solid
+		var(--uncovered-lines-color);
 	z-index: 20;
 }
 
