@@ -14,7 +14,12 @@ form?.addEventListener('click', async event => {
 				})
 				break
 			case 'customization':
-				console.log('customization button')
+				chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+					chrome.tabs.create({
+						url: chrome.runtime.getURL('customization.html'),
+						index: tab.index + 1
+					})
+				})
 				break
 			case 'clear cache':
 				chrome.tabs.query(
@@ -24,18 +29,18 @@ form?.addEventListener('click', async event => {
 
 						const url = new URL(tab.url)
 						if (
-							!url.pathname.endsWith('/changes') ||
-							!url.pathname.endsWith('/changes?diff=unified') ||
-							!url.pathname.endsWith('/changes?diff=split')
-						)
-							return
-						if (tab?.id) {
-							await chrome.storage.local.remove(url.pathname)
-							await chrome.tabs.reload(tab.id, { bypassCache: false })
-						}
+							url.pathname.endsWith('/changes') ||
+							url.pathname.endsWith('/changes?diff=unified') ||
+							url.pathname.endsWith('/changes?diff=split')
+						) {
+							if (tab?.id) {
+								await chrome.storage.local.remove(url.pathname)
+								await chrome.tabs.reload(tab.id, { bypassCache: false })
+							}
 
-						// close popup options
-						window.close()
+							// close popup options
+							window.close()
+						}
 					}
 				)
 				break

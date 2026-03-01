@@ -4,22 +4,22 @@ import Handlers from '../pullrequest/handlers'
 
 async function executeContentScript() {
 	const url = new URL(window.location.href)
+	console.log(url.pathname)
 	if (
-		!url.pathname.endsWith('/changes') ||
-		!url.pathname.endsWith('/changes?diff=unified') ||
-		!url.pathname.endsWith('/changes?diff=split')
-	)
-		return
+		url.pathname.endsWith('/changes') ||
+		url.pathname.endsWith('/changes?diff=unified') ||
+		url.pathname.endsWith('/changes?diff=split')
+	) {
+		await PullRequest.getBranchRef(Handlers.getBranchRef)
+			.getWorkflowRuns(Handlers.getWorkflowRuns)
+			.getCoverageWorkflowRun(Handlers.getCoverageWorkflowRun)
+			.getArtifactList(Handlers.getArtifactList)
+			.getCoverageArtifact(Handlers.getCoverageArtifact)
+			.getTestFramework(Handlers.getTestFramework)
+			.highlightCodeCoverage(Handlers.highlightCodeCoverage)
 
-	await PullRequest.getBranchRef(Handlers.getBranchRef)
-		.getWorkflowRuns(Handlers.getWorkflowRuns)
-		.getCoverageWorkflowRun(Handlers.getCoverageWorkflowRun)
-		.getArtifactList(Handlers.getArtifactList)
-		.getCoverageArtifact(Handlers.getCoverageArtifact)
-		.getTestFramework(Handlers.getTestFramework)
-		.highlightCodeCoverage(Handlers.highlightCodeCoverage)
-
-	await App.renderUI()
+		await App.renderUI()
+	}
 }
 
 executeContentScript()
