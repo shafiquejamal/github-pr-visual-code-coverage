@@ -83,46 +83,44 @@ const Coverage: ICodeCoverage = {
 			}
 		})
 
-		coverage_json.forEach(({ filename, covered_lines, uncovered_lines }) => {
-			function highlightLine(className: string) {
-				return function (lineNumber: Number) {
-					const lineNumberElement = document.querySelector(
-						`table[aria-label="Diff for: ${filename}"] > tbody > tr > td[data-line-number="${lineNumber}"][data-diff-side="right"]`
-					)
-					if (lineNumberElement && lineNumberElement.textContent) {
-						if (Number(lineNumberElement.textContent.trim()) === lineNumber) {
-							lineNumberElement.classList.add(className)
+		function applyHighlights() {
+			coverage_json.forEach(({ filename, covered_lines, uncovered_lines }) => {
+				function highlightLine(className: string) {
+					return function (lineNumber: Number) {
+						const lineNumberElement = document.querySelector(
+							`table[aria-label="Diff for: ${filename}"] > tbody > tr > td[data-line-number="${lineNumber}"][data-diff-side="right"]`
+						)
+						if (lineNumberElement && lineNumberElement.textContent) {
+							if (Number(lineNumberElement.textContent.trim()) === lineNumber) {
+								lineNumberElement.classList.add(className)
+							}
 						}
 					}
 				}
-			}
 
-			function applyHighlights() {
 				covered_lines.forEach(highlightLine('covered-lines'))
 				uncovered_lines.forEach(highlightLine('uncovered-lines'))
-			}
+			})
+		}
 
-			const diffList = document.querySelector(
-				'[data-testid="progressive-diffs-list"]'
+		let timeout: number
+
+		document.addEventListener('click', e => {
+			const target = e.target as HTMLElement
+
+			const expandButton = target.closest(
+				'button[data-direction].Button.Button--iconOnly'
 			)
+			if (!expandButton) return
 
-			if (diffList) {
-				let timeout: number
-				const observer = new MutationObserver(() => {
-					applyHighlights()
-					clearTimeout(timeout)
-					timeout = window.setTimeout(() => applyHighlights(), 50)
-				})
-
-				// Watch for dynamically added lines
-				observer.observe(diffList, {
-					childList: true,
-					subtree: true
-				})
-			}
-
-			applyHighlights()
+			clearTimeout(timeout)
+			timeout = window.setTimeout(() => {
+				// reapply highlights when expand button is clicked
+				applyHighlights()
+			}, 1500)
 		})
+
+		applyHighlights()
 	}
 }
 
