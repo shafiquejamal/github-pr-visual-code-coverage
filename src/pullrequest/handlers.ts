@@ -19,7 +19,10 @@ const Handlers: IPullRequestHandlers = {
 		const octokit = new Octokit({ auth: await getAuthToken() })
 		const branch = await octokit.pulls
 			.get({ owner, repo, pull_number })
-			.then(response => response.data)
+			.then(async response => {
+				await Cache.set({ gh_token_status: 'good' })
+				return response.data
+			})
 			.then(data => data.head.ref)
 			.catch(async err => {
 				if (err.message.includes('Bad credentials')) {
@@ -49,7 +52,10 @@ const Handlers: IPullRequestHandlers = {
 		const octokit = new Octokit({ auth: await getAuthToken() })
 		const workflow_runs = await octokit.rest.actions
 			.listWorkflowRunsForRepo({ owner, repo, branch })
-			.then(response => response.data.workflow_runs)
+			.then(async response => {
+				await Cache.set({ gh_token_status: 'good' })
+				return response.data.workflow_runs
+			})
 			.catch(async err => {
 				if (err.message.includes('Bad credentials')) {
 					showToastNotification(
@@ -106,7 +112,10 @@ const Handlers: IPullRequestHandlers = {
 				repo,
 				run_id
 			})
-			.then(response => response.data.artifacts)
+			.then(async response => {
+				await Cache.set({ gh_token_status: 'good' })
+				return response.data.artifacts
+			})
 			.catch(async err => {
 				if (err.message.includes('Bad credentials')) {
 					showToastNotification(
