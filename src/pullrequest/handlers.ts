@@ -16,13 +16,20 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.branch) return cache.branch
 
-		const octokit = new Octokit()
+		const octokit = new Octokit({ auth: await getAuthToken() })
 		const branch = await octokit.pulls
 			.get({ owner, repo, pull_number })
 			.then(response => response.data)
 			.then(data => data.head.ref)
-			.catch(err => {
-				console.log('Error(getBranchRef)', err)
+			.catch(async err => {
+				if (err.message.includes('Bad credentials')) {
+					showToastNotification(
+						'Invalid GitHub token - please check and update your credentials.'
+					)
+					await Cache.set({ gh_token_status: 'bad' })
+				} else {
+					showToastNotification(`Error(getBranchRef) - ${err.message}`)
+				}
 				return undefined
 			})
 
@@ -39,12 +46,19 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.workflow_runs) return cache.workflow_runs
 
-		const octokit = new Octokit()
+		const octokit = new Octokit({ auth: await getAuthToken() })
 		const workflow_runs = await octokit.rest.actions
 			.listWorkflowRunsForRepo({ owner, repo, branch })
 			.then(response => response.data.workflow_runs)
-			.catch(err => {
-				console.log('Error(getWorkflowRuns)', err)
+			.catch(async err => {
+				if (err.message.includes('Bad credentials')) {
+					showToastNotification(
+						'Invalid GitHub token - please check and update your credentials.'
+					)
+					await Cache.set({ gh_token_status: 'bad' })
+				} else {
+					showToastNotification(`Error(getWorkflowRuns) - ${err.message}`)
+				}
 				return undefined
 			})
 
@@ -85,7 +99,7 @@ const Handlers: IPullRequestHandlers = {
 		const cache = await Cache.get(url.pathname)
 		if (cache?.artifact_list) return cache.artifact_list
 
-		const octokit = new Octokit()
+		const octokit = new Octokit({ auth: await getAuthToken() })
 		const artifact_list = await octokit.rest.actions
 			.listWorkflowRunArtifacts({
 				owner,
@@ -93,8 +107,15 @@ const Handlers: IPullRequestHandlers = {
 				run_id
 			})
 			.then(response => response.data.artifacts)
-			.catch(err => {
-				console.log(`Error(getArtifactList) ${err.message}`)
+			.catch(async err => {
+				if (err.message.includes('Bad credentials')) {
+					showToastNotification(
+						'Invalid GitHub token - please check and update your credentials.'
+					)
+					await Cache.set({ gh_token_status: 'bad' })
+				} else {
+					showToastNotification(`Error(getArtifactList) - ${err.message}`)
+				}
 				return undefined
 			})
 
@@ -146,7 +167,7 @@ const Handlers: IPullRequestHandlers = {
 						'Artifact has expired - reopen the pull request to regenerate it.'
 					)
 				} else {
-					showToastNotification(err.message)
+					showToastNotification(`Error(getCoverageArtifact) - ${err.message}`)
 				}
 				return undefined
 			})
